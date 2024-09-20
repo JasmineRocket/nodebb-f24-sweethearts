@@ -120,6 +120,15 @@ module.exports = function (Plugins) {
 		checkVersion(pluginData);
 
 		try {
+			// Add category creation here
+		        const Categories = require('../../categories');
+		        Categories.create({ name: 'Homework', order: 1 }, (err) => {
+		            if (err) console.error(err);
+		        });
+		
+		        Categories.create({ name: 'Assignment', order: 2 }, (err) => {
+		            if (err) console.error(err);
+		        });
 			registerHooks(pluginData);
 			await registerPluginAssets(pluginData);
 		} catch (err) {
