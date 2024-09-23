@@ -2,8 +2,30 @@
 
 const nconf = require('nconf');
 const winston = require('winston');
+const db = require('../database');
 
 const start = module.exports;
+
+// Function to add default tags
+module.exports = async function (Topics) {
+	try {
+		// Define default tags
+		const Htag = ['Homework'];
+		const Htid = 0; 
+		const Htimestamp = Date.now(); 
+		const Atag = ['Assignment'];
+		const Atid = 1; 
+		const Atimestamp = Date.now(); 
+		
+		// Add the tags using the createTags function
+		await Topics.createTags(Htag, Htid, Htimestamp);
+		await Topics.createTags(Atag, Atid, Atimestamp);
+		
+		console.log(`Default tags added successfully.`);
+		} catch (error) {
+		console.error('Error adding default tags:', error);
+	}
+};
 
 start.start = async function () {
 	printStartupInfo();
