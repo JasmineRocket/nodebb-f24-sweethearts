@@ -94,7 +94,7 @@ module.exports = function (Groups) {
 		}
 		return payload;
 	}
-		
+
 	async function updateVisibility(groupName, hidden) {
 		if (hidden) {
 			await db.sortedSetRemoveBulk([
