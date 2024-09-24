@@ -12,7 +12,7 @@ start.start = async function () {
 
 	addProcessHandlers();
 
-	addTagsToTopic();
+	//addTagsToTopic();
 
 	try {
 		await db.init();
