@@ -5,32 +5,14 @@ const winston = require('winston');
 const db = require('../database');
 
 const start = module.exports;
-
-// Function to add default tags
-async function addDefaultTags(Topics) {
-	try {
-		// Define default tags
-		const Htag = ['Homework'];
-		const Htid = 0;
-		const Htimestamp = Date.now();
-		const Atag = ['Assignment'];
-		const Atid = 1;
-		const Atimestamp = Date.now();
-		
-		// Add the tags using the createTags function
-		await Topics.createTags(Htag, Htid, Htimestamp);
-		await Topics.createTags(Atag, Atid, Atimestamp);
-
-		console.log(`Default tags added successfully.`);
-		} catch (error) {
-		console.error('Error adding default tags:', error);
-	}
-};
+const Topics = require('./topics');
 
 start.start = async function () {
 	printStartupInfo();
 
 	addProcessHandlers();
+
+	addTagsToTopic();
 
 	try {
 		const db = require('./database');
@@ -169,5 +151,27 @@ async function shutdown(code) {
 		winston.error(err.stack);
 
 		return process.exit(code || 0);
+	}
+}
+
+async function getTopicIdByTitle(title) {
+	const topic = await db.models.topics.findOne({ title });
+	return topic ? topic.tid : null;
+
+async function addTagsToTopic() {
+	try {
+		const tid = await getTopicIdByTitle('Welcome to your NodeBB!');
+		if (tid) {
+			console.log(`Topic ID: ${tid}`);
+
+			const timestamp = Date.now(); // Get current timestamp
+			const tagsToAdd = ['Homework', 'Assignment']; // Default tags
+
+			await Topics.createTags(tagsToAdd, tid, timestamp); // Add tags to the topic
+		} else {
+			console.error('Topic not found');
+		}
+	} catch (err) {
+		console.error('Error fetching topic ID:', err);
 	}
 }
