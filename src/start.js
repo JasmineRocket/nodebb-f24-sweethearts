@@ -2,13 +2,17 @@
 
 const nconf = require('nconf');
 const winston = require('winston');
+const db = require('../database');
 
 const start = module.exports;
+const Topics = require('./topics');
 
 start.start = async function () {
 	printStartupInfo();
 
 	addProcessHandlers();
+
+	addTagsToTopic();
 
 	try {
 		const db = require('./database');
@@ -147,5 +151,27 @@ async function shutdown(code) {
 		winston.error(err.stack);
 
 		return process.exit(code || 0);
+	}
+}
+
+async function getTopicIdByTitle(title) {
+	const topic = await db.models.topics.findOne({ title });
+	return topic ? topic.tid : null;
+
+async function addTagsToTopic() {
+	try {
+		const tid = await getTopicIdByTitle('Welcome to your NodeBB!');
+		if (tid) {
+			console.log(`Topic ID: ${tid}`);
+
+			const timestamp = Date.now(); // Get current timestamp
+			const tagsToAdd = ['Homework', 'Assignment']; // Default tags
+
+			await Topics.createTags(tagsToAdd, tid, timestamp); // Add tags to the topic
+		} else {
+			console.error('Topic not found');
+		}
+	} catch (err) {
+		console.error('Error fetching topic ID:', err);
 	}
 }
