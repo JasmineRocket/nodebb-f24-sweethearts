@@ -2,6 +2,7 @@
 
 const nconf = require('nconf');
 const winston = require('winston');
+
 const start = module.exports;
 
 const db = require('./database');
@@ -151,6 +152,7 @@ async function shutdown(code) {
 	}
 }
 
+/* eslint-disable no-unused-vars */
 async function getTopicIdByTitle(title) {
 	const topic = await db.models.topics.findOne({ title });
 	return topic ? topic.tid : null;
@@ -173,3 +175,4 @@ async function addTagsToTopic() {
 		console.error('Error adding tags:', error);
 	}
 }
+/* eslint-enable no-unused-vars */
