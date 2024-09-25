@@ -165,5 +165,10 @@ async function addTagsToTopic() {
 			const tagsToAdd = ['Homework', 'Assignment']; // Default tags
 
 			await Topics.createTags(tagsToAdd, tid, timestamp); // Add tags to the topic
-		} 
+		} else {
+			console.error('Topic not found');
+		}
+	} catch (error) {
+		console.error('Error adding tags:', error);
+	}
 }
