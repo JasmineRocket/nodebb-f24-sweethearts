@@ -12,8 +12,6 @@ start.start = async function () {
 
 	addProcessHandlers();
 
-	//addTagsToTopic();
-
 	try {
 		await db.init();
 		await db.checkCompatibility();
@@ -167,10 +165,5 @@ async function addTagsToTopic() {
 			const tagsToAdd = ['Homework', 'Assignment']; // Default tags
 
 			await Topics.createTags(tagsToAdd, tid, timestamp); // Add tags to the topic
-		} else {
-			console.error('Topic not found');
-		}
-	} catch (err) {
-		console.error('Error fetching topic ID:', err);
-	}
+		} 
 }
