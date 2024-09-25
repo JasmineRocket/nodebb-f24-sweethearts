@@ -154,6 +154,7 @@ async function shutdown(code) {
 async function getTopicIdByTitle(title) {
 	const topic = await db.models.topics.findOne({ title });
 	return topic ? topic.tid : null;
+}
 
 async function addTagsToTopic() {
 	try {
