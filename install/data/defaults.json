@@ -119,6 +119,7 @@
     "notificationType_post-queue": "notification",
     "notificationType_new-post-flag": "notification",
     "notificationType_new-user-flag": "notification",
+    "notificationType_faculty-reply": "notification",
     "topicStaleDays": 60,
     "maxTopicsPerPage": 20,
     "maxPostsPerPage": 20,
