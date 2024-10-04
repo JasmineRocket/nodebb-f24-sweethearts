@@ -209,38 +209,34 @@ module.exports = function (Topics) {
 		if (parseInt(uid, 10) || meta.config.allowGuestReplyNotifications) {
 			const { displayname } = postData.user;
 
-			// Checks if the user is an admin
-			const isAdmin = await privileges.users.isAdministrator(uid);
+			let notificationType = 'new-reply';
 			let notificationMessage;
+			let nid;
+			let mergeId;
 
 			if (isAdmin) {
-				// Handles admin/instructor notification separately so it doesn't get bundled with
-				// notifications of non-admin replies.
-				// It does this by using a different notification ID and merge ID for admin replies.
-				notificationMessage = translator.compile('notifications:admin-posted-to', displayname, postData.topic.title);
-				Topics.notifyFollowers(postData, uid, {
-					type: 'new-reply',
-					bodyShort: notificationMessage,
-					nid: `admin_post:tid:${postData.topic.tid}:pid:${postData.pid}:uid:${uid}`,
-					mergeId: `notifications:admin-posted-to|${postData.topic.tid}`,
-				});
+				notificationType = 'faculty-reply';
+				notificationMessage = translator.compile('notifications:faculty-posted-to', displayname, postData.topic.title);
+				nid = `faculty_post:tid:${postData.topic.tid}:pid:${postData.pid}:uid:${uid}`;
+				mergeId = `notifications:faculty-posted-to|${postData.topic.tid}`;
 			} else {
-				// This code handles non-admin replies, allowing bundling.
 				notificationMessage = translator.compile('notifications:user-posted-to', displayname, postData.topic.title);
-
-				Topics.notifyFollowers(postData, uid, {
-					type: 'new-reply',
-					bodyShort: notificationMessage,
-					nid: `new_post:tid:${postData.topic.tid}:pid:${postData.pid}:uid:${uid}`,
-					mergeId: `notifications:user-posted-to|${postData.topic.tid}`,
-				});
+				nid = `new_post:tid:${postData.topic.tid}:pid:${postData.pid}:uid:${uid}`;
+				mergeId = `notifications:user-posted-to|${postData.topic.tid}`;
 			}
+
+			await Topics.notifyFollowers(postData, uid, {
+				type: notificationType,
+				bodyShort: notificationMessage,
+				nid: nid,
+				mergeId: mergeId,
+			});
 
 			analytics.increment(['posts', `posts:byCid:${data.cid}`]);
 			plugins.hooks.fire('action:topic.reply', { post: _.clone(postData), data: data });
-
-			return postData;
 		}
+
+		return postData;
 	};
 
 	async function onNewPost(postData, data) {

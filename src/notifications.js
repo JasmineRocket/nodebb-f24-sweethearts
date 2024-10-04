@@ -157,10 +157,10 @@ Notifications.create = async function (data) {
 	if (!result.data) {
 		return null;
 	}
-    // Handle faculty reply notification
-    if (result.data.type === 'faculty-reply') {
-        result.data.importance = result.data.importance || 6; // Setting a higher importance for faculty replies
-    }
+	// Handle faculty reply notification
+	if (result.data.type === 'faculty-reply') {
+		result.data.importance = result.data.importance || 6; // Setting a higher importance for faculty replies
+	}
 	await Promise.all([
 		db.sortedSetAdd('notifications', now, data.nid),
 		db.setObject(`notifications:${data.nid}`, data),
