@@ -338,15 +338,15 @@ exports.testSocket = async function (socketPath) {
 require('./promisify')(exports);
 
 async function createNewTag() {
-    try {
-        const newTag1 = 'homework';
-	const newTag2 = 'assignment'; 
+	try {
+		const newTag1 = 'homework';
+		const newTag2 = 'assignment';
 
-        await topics.createEmptyTag(newTag1);
-        console.log(`Tag "${newTag1}" successfully created!`);
+		await topics.createEmptyTag(newTag1);
+		console.log(`Tag "${newTag1}" successfully created!`);
 		await topics.createEmptyTag(newTag2);
 		console.log(`Tag "${newTag2}" successfully created!`);
-    } catch (err) {
-        console.error('Error creating tag:', err.message);
-    }
+	} catch (err) {
+		console.error('Error creating tag:', err.message);
+	}
 }
