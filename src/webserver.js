@@ -34,6 +34,7 @@ const topicEvents = require('./topics/events');
 const privileges = require('./privileges');
 const routes = require('./routes');
 const auth = require('./routes/authentication');
+const topics = require('./topics');
 
 const helpers = require('./helpers');
 
@@ -86,6 +87,7 @@ exports.listen = async function () {
 	helpers.register();
 	logger.init(app);
 	await initializeNodeBB();
+	await createNewTag();
 	winston.info('🎉 NodeBB Ready');
 
 	require('./socket.io').server.emit('event:nodebb.ready', {});
@@ -334,3 +336,17 @@ exports.testSocket = async function (socketPath) {
 };
 
 require('./promisify')(exports);
+
+async function createNewTag() {
+    try {
+        const newTag1 = 'homework';
+	const newTag2 = 'assignment'; 
+
+        await topics.createEmptyTag(newTag1);
+        console.log(`Tag "${newTag1}" successfully created!`);
+		await topics.createEmptyTag(newTag2);
+		console.log(`Tag "${newTag2}" successfully created!`);
+    } catch (err) {
+        console.error('Error creating tag:', err.message);
+    }
+}
