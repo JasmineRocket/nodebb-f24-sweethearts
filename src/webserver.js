@@ -347,6 +347,6 @@ async function createNewTag() {
 		await topics.createEmptyTag(newTag2);
 		console.log(`Tag "${newTag2}" successfully created!`);
 	} catch (err) {
-		console.error('Error creating tag:', err.message);
+		console.error('Error creating tag: ', err.message);
 	}
 }
