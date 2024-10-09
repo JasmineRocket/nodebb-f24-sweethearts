@@ -12,6 +12,7 @@ const topics = require('../src/topics');
 const categories = require('../src/categories');
 const notifications = require('../src/notifications');
 const socketNotifications = require('../src/socket.io/notifications');
+const groups = require('../src/groups');
 
 const sleep = util.promisify(setTimeout);
 
@@ -387,6 +388,92 @@ describe('Notifications', () => {
 		const data = await user.notifications.getAll(followerUid, '');
 		assert(data);
 	});
+
+	// New tests for faculty reply notifications
+	describe('Faculty Reply Notifications', () => {
+		let adminUid;
+		let facultyUid;
+		let regularUid;
+		let cid;
+		let tid;
+
+		before(async () => {
+			adminUid = await user.create({ username: 'admin' });
+			facultyUid = await user.create({ username: 'faculty' });
+			regularUid = await user.create({ username: 'regular' });
+
+			await groups.create({ name: 'faculty' });
+			await groups.join('faculty', facultyUid);
+			await groups.join('administrators', adminUid);
+
+			cid = await categories.create({
+				name: 'Test Category',
+				description: 'Test category created by testing script',
+			}).then(category => category.cid);
+
+			tid = await topics.post({
+				uid: regularUid,
+				cid: cid,
+				title: 'Test Topic',
+				content: 'This is a test topic',
+			}).then(result => result.topicData.tid);
+		});
+
+		it('should create a faculty-reply notification when a faculty member replies', async () => {
+			const postData = await topics.reply({
+				uid: facultyUid,
+				tid: tid,
+				content: 'This is a faculty reply',
+			});
+
+			// Wait for notification to be created
+			await sleep(2000);
+
+			const notifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
+			const notifData = await db.getObjects(notifs.map(nid => `notifications:${nid}`));
+
+			const facultyReplyNotif = notifData.find(n => n.type === 'faculty-reply');
+			assert(facultyReplyNotif, 'Faculty reply notification should exist');
+			assert.strictEqual(facultyReplyNotif.bodyShort, `[[notifications:faculty-posted-to, ${postData.user.displayname}, ${postData.topic.title}]]`);
+		});
+
+		it('should not create a faculty-reply notification when a regular user replies', async () => {
+			await topics.reply({
+				uid: regularUid,
+				tid: tid,
+				content: 'This is a regular reply',
+			});
+
+			// Wait for potential notification to be created
+			await sleep(2000);
+
+			const notifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
+			const notifData = await db.getObjects(notifs.map(nid => `notifications:${nid}`));
+
+			const regularReplyNotif = notifData.find(n => n.type === 'new-reply');
+			assert(regularReplyNotif, 'Regular reply notification should exist');
+
+			const facultyReplyNotif = notifData.find(n => n.type === 'faculty-reply');
+			assert(!facultyReplyNotif, 'Faculty reply notification should not exist for regular user reply');
+		});
+
+		it('should allow users to configure faculty-reply notification preferences', async () => {
+			await user.setSetting(regularUid, 'notificationType_faculty-reply', 'notification');
+
+			const settings = await user.getSettings(regularUid);
+			assert.strictEqual(settings['notificationType_faculty-reply'], 'notification', 'Faculty reply notification preference should be set');
+		});
+
+		after(async () => {
+			await user.delete(adminUid);
+			await user.delete(facultyUid);
+			await user.delete(regularUid);
+			await db.delete(`category:${cid}`);
+			await topics.purge(tid);
+			await groups.destroy('faculty');
+		});
+	});
+
 
 	it('should send welcome notification', (done) => {
 		meta.config.welcomeNotification = 'welcome to the forums';
