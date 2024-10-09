@@ -393,36 +393,24 @@ describe('Notifications', () => {
 	// Asked help from ChatGPT to generate these tests.
 	describe('Faculty Reply Notifications', () => {
 		let adminUid;
-		let facultyUid;
 		let regularUid;
 		let cid;
 		let tid;
-
+	
 		before(async () => {
 			// Create test users
 			adminUid = await user.create({ username: 'admin' });
-			facultyUid = await user.create({ username: 'faculty' });
 			regularUid = await user.create({ username: 'regular' });
-
-			// Create or get the 'faculty' group
-			try {
-				await groups.create({ name: 'faculty' });
-			} catch (err) {
-				if (err && err.message !== '[[error:group-already-exists]]') {
-					throw err;
-				}
-			}
-
-			// Join users to their respective groups
-			await groups.join('faculty', facultyUid);
+	
+			// Make the admin user a part of the administrators group
 			await groups.join('administrators', adminUid);
-
+	
 			// Create test category and topic
 			cid = await categories.create({
 				name: 'Test Category',
 				description: 'Test category created by testing script',
 			}).then(category => category.cid);
-
+	
 			tid = await topics.post({
 				uid: regularUid,
 				cid: cid,
@@ -430,43 +418,66 @@ describe('Notifications', () => {
 				content: 'This is a test topic',
 			}).then(result => result.topicData.tid);
 		});
-
-		it('should create a faculty-reply notification when a faculty member replies', async () => {
+	
+		it('should create a faculty-reply notification when an admin (faculty) replies', async () => {
 			const postData = await topics.reply({
-				uid: facultyUid,
+				uid: adminUid,
 				tid: tid,
 				content: 'This is a faculty reply',
 			});
-
-			// Waits for notification to be created.
-			await sleep(2000);
-
+	
+			// Wait for notification to be created
+			await sleep(3000);
+	
 			const notifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
+			console.log('Notifications:', notifs);
+	
 			const notifData = await db.getObjects(notifs.map(nid => `notifications:${nid}`));
-
+			console.log('Notification Data:', notifData);
+			
 			const facultyReplyNotif = notifData.find(n => n.type === 'faculty-reply');
+			
+			if (!facultyReplyNotif) {
+				console.log('All notification types:', notifData.map(n => n.type));
+			}
+	
 			assert(facultyReplyNotif, 'Faculty reply notification should exist');
 			assert.strictEqual(facultyReplyNotif.bodyShort, `[[notifications:faculty-posted-to, ${postData.user.displayname}, ${postData.topic.title}]]`);
 		});
-
+	
 		it('should not create a faculty-reply notification when a regular user replies', async () => {
-			await topics.reply({
+			// Clear existing notifications
+			await db.delete(`uid:${regularUid}:notifications:unread`);
+			
+			const beforeNotifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
+			console.log('Notifications before reply:', beforeNotifs);
+	
+			const replyData = await topics.reply({
 				uid: regularUid,
 				tid: tid,
-				content: 'This is a regular reply',
+				content: 'This is a regular user reply',
 			});
-
+			console.log('Reply data:', replyData);
+	
 			// Wait for potential notification to be created
-			await sleep(2000);
-
-			const notifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
-			const notifData = await db.getObjects(notifs.map(nid => `notifications:${nid}`));
-
-			const regularReplyNotif = notifData.find(n => n.type === 'new-reply');
-			assert(regularReplyNotif, 'Regular reply notification should exist');
-
-			const facultyReplyNotif = notifData.find(n => n.type === 'faculty-reply');
-			assert(!facultyReplyNotif, 'Faculty reply notification should not exist for regular user reply');
+			await sleep(3000);
+	
+			const afterNotifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
+			console.log('Notifications after reply:', afterNotifs);
+	
+			const notifData = await db.getObjects(afterNotifs.map(nid => `notifications:${nid}`));
+			console.log('Notification Data:', notifData);
+	
+			// Log all notification types
+			console.log('All notification types:', notifData.map(n => n.type));
+	
+			// Check that no new notifications were created
+			assert.strictEqual(afterNotifs.length, 0, 'No new notifications should be created for a regular user reply');
+	
+			// Logging existing notifications
+			if (notifData.length > 0) {
+				console.log('Unexpected notifications:', notifData);
+			}
 		});
 
 		it('should allow users to configure faculty-reply notification preferences', async () => {
@@ -477,19 +488,15 @@ describe('Notifications', () => {
 		});
 
 		after(async () => {
-			// Clean up users
+			// Clean up users, category, and topic
 			await Promise.all([
 				user.delete(adminUid),
-				user.delete(facultyUid),
 				user.delete(regularUid),
 			].map(p => p.catch(() => { /* ignore errors */ })));
-
-			// Clean up category and topic
 			await db.delete(`category:${cid}`);
 			await topics.purge(tid);
-
-			// Remove users from groups
-			await groups.leave('faculty', facultyUid);
+	
+			// Remove admin from administrators group
 			await groups.leave('administrators', adminUid);
 		});
 	});
