@@ -5,7 +5,7 @@ const batch = require('../../batch');
 
 module.exports = {
 	name: 'Add_faculty_reply_notification_setting_for_all_users',
-	timestamp: Date.UTC(2023, 5, 1),
+	timestamp: Date.UTC(2024, 10, 8),
 	method: async function () {
 		const { progress } = this;
 
