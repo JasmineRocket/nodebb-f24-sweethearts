@@ -390,6 +390,7 @@ describe('Notifications', () => {
 	});
 
 	// New tests for faculty reply notifications
+	// Asked help from ChatGPT to generate these tests.
 	describe('Faculty Reply Notifications', () => {
 		let adminUid;
 		let facultyUid;
@@ -398,14 +399,25 @@ describe('Notifications', () => {
 		let tid;
 
 		before(async () => {
+			// Create test users
 			adminUid = await user.create({ username: 'admin' });
 			facultyUid = await user.create({ username: 'faculty' });
 			regularUid = await user.create({ username: 'regular' });
 
-			await groups.create({ name: 'faculty' });
+			// Create or get the 'faculty' group
+			try {
+				await groups.create({ name: 'faculty' });
+			} catch (err) {
+				if (err && err.message !== '[[error:group-already-exists]]') {
+					throw err;
+				}
+			}
+
+			// Join users to their respective groups
 			await groups.join('faculty', facultyUid);
 			await groups.join('administrators', adminUid);
 
+			// Create test category and topic
 			cid = await categories.create({
 				name: 'Test Category',
 				description: 'Test category created by testing script',
@@ -426,7 +438,7 @@ describe('Notifications', () => {
 				content: 'This is a faculty reply',
 			});
 
-			// Wait for notification to be created
+			// Waits for notification to be created.
 			await sleep(2000);
 
 			const notifs = await db.getSortedSetRange(`uid:${regularUid}:notifications:unread`, 0, -1);
@@ -465,12 +477,20 @@ describe('Notifications', () => {
 		});
 
 		after(async () => {
-			await user.delete(adminUid);
-			await user.delete(facultyUid);
-			await user.delete(regularUid);
+			// Clean up users
+			await Promise.all([
+				user.delete(adminUid),
+				user.delete(facultyUid),
+				user.delete(regularUid),
+			].map(p => p.catch(() => { /* ignore errors */ })));
+
+			// Clean up category and topic
 			await db.delete(`category:${cid}`);
 			await topics.purge(tid);
-			await groups.destroy('faculty');
+
+			// Remove users from groups
+			await groups.leave('faculty', facultyUid);
+			await groups.leave('administrators', adminUid);
 		});
 	});
 
