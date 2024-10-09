@@ -2504,6 +2504,87 @@ describe('Topic\'s', () => {
 			assert(!score);
 		});
 	});
+
+	describe('createNewTag', () => {
+		let originalCreateEmptyTag;
+			
+		beforeEach(() => {
+		// Backup the original createEmptyTag function
+		originalCreateEmptyTag = topics.createEmptyTag;
+		// Mock the createEmptyTag method
+		topics.createEmptyTag = (tag) => {
+			if (tag === 'homework') {
+			return Promise.resolve(); // Simulate successful creation
+			}
+			if (tag === 'assignment') {
+			return Promise.resolve(); // Simulate successful creation
+			}
+			return Promise.reject(new Error('Tag already exists')); // Simulate error
+			};
+		});
+		
+		afterEach(() => {
+			// Restore the original createEmptyTag function
+			topics.createEmptyTag = originalCreateEmptyTag;
+		});
+		
+		it('should create tags successfully', async () => {
+			// Capture console.log output
+			let logOutput = [];
+			const originalLog = console.log;
+			console.log = (msg) => logOutput.push(msg);
+			
+			await topics.createNewTag();
+			
+			assert.strictEqual(logOutput.includes('Tag "homework" successfully created!'), true);
+			assert.strictEqual(logOutput.includes('Tag "assignment" successfully created!'), true);
+			
+			// Restore console.log
+			console.log = originalLog;
+		});
+		
+		it('should log an error if the tag already exists', async () => {
+			// Capture console.error output
+			let errorOutput = [];
+			const originalError = console.error;
+			console.error = (msg) => errorOutput.push(msg);
+			
+			// Modify createEmptyTag to simulate an error for homework
+			topics.createEmptyTag = () => Promise.reject(new Error('Tag already exists'));
+			
+			await topics.createNewTag();
+			
+			assert.strictEqual(errorOutput.includes('Error creating tag: Tag already exists'), true);
+			
+			// Restore console.error
+			console.error = originalError;
+		});
+		
+		it('should log an error for invalid input', async () => {
+			// Capture console.error output
+			let errorOutput = [];
+			const originalError = console.error;
+			console.error = (msg) => errorOutput.push(msg);
+			
+			// Simulate an invalid input scenario
+			topics.createEmptyTag = (tag) => {
+				if (!tag) {
+					return Promise.reject(new Error('Invalid tag name'));
+				}
+			    return Promise.resolve();
+			};
+		
+		await topics.createNewTag(null); // Simulating an invalid input
+		
+		assert.strictEqual(errorOutput.includes('Error creating tag: Invalid tag name'), true);
+		
+		// Restore console.error
+		console.error = originalError;
+		});
+		
+	// Additional test cases can be added as needed...
+	});
+
 });
 
 describe('Topics\'', async () => {
