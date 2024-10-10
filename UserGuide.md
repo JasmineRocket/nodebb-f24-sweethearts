@@ -14,13 +14,13 @@ As a student, I want to receive an immediate notification when a course faculty 
 * Real-time notifications: 
     * Push notifications that will appear on the notification side bar and on the main notification page when a course faculty replies to your post.
     ![Screenshot 1](user_guide_images/ins_notif_1.png)
-    ![Screenshot 3](user_guide_images/ins_notif_3.png)
+    ![Screenshot 2](user_guide_images/ins_notif_2.png)
 
     * These notifications are delivered separately from non-faculty reply notifications and are indicated with the "[COURSE-FACULTY]" on the title. (As shown in the above images.)
     
 
 * User Preferences: Like other notifications, users are able to customize their notification settings (choose between push, email, both, or turn both off) in the account settings page.
-![Screenshot 2](user_guide_images/ins_notif_2.png)
+![Screenshot 3](user_guide_images/ins_notif_3.png)
 
 ### How To Use and Test User Story 2 Feature
 1. Register 2 accounts: an admin and a non-admin (student). 
