@@ -49,6 +49,7 @@ if (nconf.get('ssl')) {
 
 module.exports.server = server;
 module.exports.app = app;
+module.exports.createNewTag = createNewTag;
 
 server.on('error', (err) => {
 	if (err.code === 'EADDRINUSE') {
