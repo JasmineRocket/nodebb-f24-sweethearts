@@ -1,8 +1,6 @@
-# User Guide for User Stories
-## Team SWEethearts
+# User Guide for Team SWEethearts User Stories 
 
 ## Table of Contents
-
 1. [User Story 2](#user-story-2)
 2. 
 
@@ -13,14 +11,14 @@ As a student, I want to receive an immediate notification when a course faculty 
 ### Feature Overview
 * Real-time notifications: 
     * Push notifications that will appear on the notification side bar and on the main notification page when a course faculty replies to your post.
-    ![Screenshot 1](user_guide_images/ins_notif_1.png)
-    ![Screenshot 2](user_guide_images/ins_notif_2.png)
+    <img src="user_guide_images/ins_notif_1.png" alt="Screenshot 1" width="300"/>
+    <img src="user_guide_images/ins_notif_2.png" alt="Screenshot 2" width="300"/>
 
     * These notifications are delivered separately from non-faculty reply notifications and are indicated with the "[COURSE-FACULTY]" on the title. (As shown in the above images.)
     
 
 * User Preferences: Like other notifications, users are able to customize their notification settings (choose between push, email, both, or turn both off) in the account settings page.
-![Screenshot 3](user_guide_images/ins_notif_3.png)
+<img src="user_guide_images/ins_notif_3.png" alt="Screenshot 3" width="300"/>
 
 ### How To Use and Test User Story 2 Feature
 1. Register 2 accounts: an admin and a non-admin (student). 
@@ -35,17 +33,15 @@ As a student, I want to receive an immediate notification when a course faculty 
 **Note: For this feature we assume that every admin account is a course faculty.**
 
 ### Automated Tests - located in *test/notifications.js*
-
-#### Error Tests: Testing invalid inputs
-* Test for 
-
-#### Valid Tests
-
-
-
+#### Test Cases: Lines 392 - 585
+* Lines 442 - 448: Testing basic functionality: user should receive a notification when a course faculty replies.
+* Lines 450 - 485: Test that user should not receive notification when regular user replies.
+* Lines 487 - 535: Test to check that user can mark faculty replies as read.
+* Lines 537 - 544: Test to check that changing notification settings work.
+* Lines 546 - 571: Test to check that separate faculty replies trigger separate notifications.
 
 #### Test Justification
-We believe that these tests are sufficient because ...
+We believe that these tests are sufficient as it tests the basic functionality of this new feature. The tests ensure that users receive notifications from faculty, can differentiate between faculty and regular user replies, and can manage notifications (e.g., marking them as read or adjusting settings). This ensures both the functionality and user control of the feature, making the system reliable.
 
 
 ## User Story 
