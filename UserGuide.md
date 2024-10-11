@@ -54,7 +54,7 @@ As a TA, I want to filter through posts that have questions about the homework r
       <img width="380" alt="image" src="https://github.com/user-attachments/assets/ce0e0ccd-2fea-4ab8-b362-3c4402eccde3">
     * This feature is designed to improve the organization and efficiency of managing a high volume of posts, allowing TAs to focus on one topic area at a time without distraction.
 
-### How To Use and Test User Story 2 Feature
+### How To Use and Test User Story 5 Feature
 1.	Start NodeBB using the command ./nodebb start (locally or on a server). The "Homework" and "Assignment" tags should automatically be added to the database by the helper function in src/webserver.js.
 2.	Log in as a user and create a new post. Then select the "Homework" or "Assignment" tag for the message depending on the forum or category.
 3.	Log in as a TA and navigate to the course forum. Use the filtering options to view only posts tagged with "Homework" or "Assignment."
@@ -79,21 +79,17 @@ As a student, I want to save posts to favorites for posts that contains importan
     <img src="user_guide_images/fav_btn_1.png" alt="Screenshot 4" width="500"/>
     <img src="user_guide_images/fav_btn_2.png" alt="Screenshot 5" width="500"/>
 
-### How to Use and Test User Story 
+### How to Use and Test User Story 5
 1. User needs to register; does not have to be an admin
 2. Go to "General Discussion" page
 3. There should be at least one topic within the discussion page. If there are none, make a test post.
 4. You should be able to see a Star button signifying Favorite
 5. There should also be a Favorite button in the post bar
-6. The Favorite button in post bar can be toggled on and off.
 
 
 ### Automated tests are located in `test/topics/favorite.js`
 
-#### Error Tests: Testing invalid inputs
-* Test for invalid input
-
 #### Valid Tests
 
 #### Test Justification
-We believe that these tests are sufficient because 
+We believe that these tests are sufficient because they verify if the topic can be successfully added to and removed from favorite. They also checked if the current status of the topic (whether it's saved to favorites or not) is correct, and if the button can successfully toggle between save to favorites and remove from favorites. It also checks edge case about invalid inputs i.e. throw an error if the requested topic id doesn't exist.  
