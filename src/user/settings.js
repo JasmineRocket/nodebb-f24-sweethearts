@@ -84,6 +84,9 @@ module.exports = function (User) {
 			settings[notificationType] = getSetting(settings, notificationType, 'notification');
 		});
 
+		// Load the faculty reply notification setting
+		settings['notificationType_faculty-reply'] = getSetting(settings, 'notificationType_faculty-reply', 'notification');
+
 		return settings;
 	}
 
@@ -155,6 +158,12 @@ module.exports = function (User) {
 				settings[notificationType] = data[notificationType];
 			}
 		});
+
+		// Handling for faculty-reply notification
+		if (data['notificationType_faculty-reply']) {
+			settings['notificationType_faculty-reply'] = data['notificationType_faculty-reply'];
+		}
+
 		const result = await plugins.hooks.fire('filter:user.saveSettings', { uid: uid, settings: settings, data: data });
 		await db.setObject(`user:${uid}:settings`, result.settings);
 		await User.updateDigestSetting(uid, data.dailyDigestFreq);

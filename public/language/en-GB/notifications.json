@@ -50,13 +50,17 @@
 	"user-flagged-user-dual": "<strong>%1</strong> and <strong>%2</strong> flagged a user profile (%3)",
 	"user-flagged-user-triple": "<strong>%1</strong>, <strong>%2</strong> and <strong>%3</strong> flagged a user profile (%4)",
 	"user-flagged-user-multiple": "<strong>%1</strong>, <strong>%2</strong> and %3 others flagged a user profile (%4)",
-	"admin-posted-to" : "<strong>[COURSE FACULTY] %1</strong> has posted a reply to: <strong>%2</strong>",
 	"user-posted-to" : "<strong>%1</strong> has posted a reply to: <strong>%2</strong>",
 	"user-posted-to-dual" : "<strong>%1</strong> and <strong>%2</strong> have posted replies to: <strong>%3</strong>",
 	"user-posted-to-triple" : "<strong>%1</strong>, <strong>%2</strong> and <strong>%3</strong> have posted replies to: <strong>%4</strong>",
 	"user-posted-to-multiple" : "<strong>%1</strong>, <strong>%2</strong> and %3 others have posted replies to: <strong>%4</strong>",
 	"user-posted-topic": "<strong>%1</strong> has posted a new topic: <strong>%2</strong>",
 	"user-edited-post" : "<strong>%1</strong> has edited a post in <strong>%2</strong>",
+
+	"faculty-posted-to" : "<strong>[COURSE FACULTY] %1</strong> has posted a reply to: <strong>%2</strong>",
+	"faculty-posted-to-dual" : "<strong>[COURSE FACULTY] %1</strong> and <strong>[COURSE FACULTY] %2</strong> have posted replies to: <strong>%3</strong>",
+	"faculty-posted-to-multiple" : "<strong>[COURSE FACULTY] %1</strong>, <strong>[COURSE FACULTY] %2</strong> and %3 other faculty members have posted replies to: <strong>%4</strong>",
+
 
 	"user-posted-topic-with-tag": "<strong>%1</strong> has posted a new topic with tag <strong>%2</strong>",
 	"user-posted-topic-with-tag-dual": "<strong>%1</strong> has posted a new topic with tags <strong>%2</strong> and <strong>%3</strong>",
@@ -90,6 +94,7 @@
 	"notification-only": "Notification Only",
 	"email-only": "Email Only",
 	"notification-and-email": "Notification & Email",
+	
 	"notificationType-upvote": "When someone upvotes your post",
 	"notificationType-new-topic": "When someone you follow posts a topic",
 	"notificationType-new-topic-with-tag": "When a topic is posted with a tag you follow",
@@ -107,5 +112,7 @@
 	"notificationType-post-queue": "When a new post is queued",
 	"notificationType-new-post-flag": "When a post is flagged",
 	"notificationType-new-user-flag": "When a user is flagged",
-	"notificationType-new-reward": "When you earn a new reward"
+	"notificationType-new-reward": "When you earn a new reward",
+	"notificationType-faculty-reply": "When a course faculty replies to your post" 
+
 }

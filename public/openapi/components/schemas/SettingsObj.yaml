@@ -1,6 +1,11 @@
 Settings:
   type: object
   properties:
+    # Adding faculty reply to the api schema
+    notificationType_faculty-reply:
+      type: string
+      description: Notification type for when a course faculty replies to your post
+      enum: [none, notification, email, notificationemail] 
     showemail:
       type: boolean
       description: Show user email in profile page
@@ -162,3 +167,4 @@ Settings:
     - categoryWatchState
     - notificationType_group-request-membership
     - uid
+    - notificationType_faculty-reply

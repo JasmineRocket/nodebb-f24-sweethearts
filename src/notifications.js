@@ -42,6 +42,8 @@ Notifications.baseTypes = [
 	'notificationType_group-leave',
 	'notificationType_group-request-membership',
 	'notificationType_new-reward',
+	// Adding the new notification type
+	'notificationType_faculty-reply',
 ];
 
 Notifications.privilegedTypes = [
@@ -155,6 +157,10 @@ Notifications.create = async function (data) {
 	if (!result.data) {
 		return null;
 	}
+	// Handle faculty reply notification
+	if (result.data.type === 'faculty-reply') {
+		result.data.importance = result.data.importance || 6; // Setting a higher importance for faculty replies
+	}
 	await Promise.all([
 		db.sortedSetAdd('notifications', now, data.nid),
 		db.setObject(`notifications:${data.nid}`, data),
@@ -241,7 +247,7 @@ async function pushToUids(uids, notification) {
 		results = await getUidsBySettings(data.uids);
 	}
 	await sendNotification(results.uidsToNotify);
-	const delayNotificationTypes = ['new-chat', 'new-group-chat', 'new-public-chat'];
+	const delayNotificationTypes = ['new-chat', 'new-group-chat', 'new-public-chat', 'faculty-reply'];
 	if (delayNotificationTypes.includes(notification.type)) {
 		const cacheKey = `${notification.mergeId}|${results.uidsToEmail.join(',')}`;
 		if (notificationCache.has(cacheKey)) {

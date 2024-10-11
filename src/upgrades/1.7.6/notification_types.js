@@ -13,6 +13,7 @@ module.exports = {
 			notificationType_upvote: config.notificationType_upvote || 'notification',
 			'notificationType_new-topic': config['notificationType_new-topic'] || 'notification',
 			'notificationType_new-reply': config['notificationType_new-reply'] || postNotifications,
+			'notificationType_faculty-reply': config['notificationType_faculty-reply'] || 'notification',
 			notificationType_follow: config.notificationType_follow || 'notification',
 			'notificationType_new-chat': config['notificationType_new-chat'] || chatNotifications,
 			'notificationType_group-invite': config['notificationType_group-invite'] || 'notification',

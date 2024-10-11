@@ -46,7 +46,6 @@
     "user-flagged-user-dual": "<strong>%1</strong> et <strong>%2</strong> ont signalé un profil utilisateur (%3)",
     "user-flagged-user-triple": "<strong>%1</strong>, <strong>%2</strong> et <strong>%3</strong> ont signalé un profil utilisateur (%4)",
     "user-flagged-user-multiple": "<strong>%1</strong>, <strong>%2</strong> et %3 autres ont signalé un profil utilisateur (%4)",
-    "admin-posted-to": "<strong>[COURSE FACULTY] %1</strong> a répondu à : <strong>%2</strong>",
     "user-posted-to": "<strong>%1</strong> a répondu à : <strong>%2</strong>",
     "user-posted-to-dual": "<strong>%1</strong> et <strong>%2</strong> ont posté une réponse à : <strong>%3</strong>",
     "user-posted-to-triple": "<strong>%1</strong>, <strong>%2</strong> et <strong>%3</strong> ont publié des réponses à : <strong>%4</strong>",
@@ -62,6 +61,12 @@
     "user-started-following-you-dual": "<strong>%1</strong> et <strong>%2</strong> se sont abonnés à votre compte.",
     "user-started-following-you-triple": "<strong>%1</strong>, <strong>%2</strong> et <strong>%3</strong> ont commencé à vous suivre.",
     "user-started-following-you-multiple": "<strong>%1</strong>, <strong>%2</strong> et %3 autres ont commencé à vous suivre.",
+
+    "faculty-posted-to" : "<strong>[COURSE FACULTY] %1</strong> has posted a reply to: <strong>%2</strong>",
+	"faculty-posted-to-dual" : "<strong>[COURSE FACULTY] %1</strong> and <strong>[COURSE FACULTY] %2</strong> have posted replies to: <strong>%3</strong>",
+	"faculty-posted-to-multiple" : "<strong>[COURSE FACULTY] %1</strong>, <strong>[COURSE FACULTY] %2</strong> and %3 other faculty members have posted replies to: <strong>%4</strong>",
+    "notificationType-faculty-reply": "When a course faculty replies to your post", 
+
     "new-register": "<strong>%1</strong> a envoyé une demande d'incription.",
     "new-register-multiple": "<strong>%1</strong> inscription(s) est en attente de validation.",
     "flag-assigned-to-you": "<strong>Signalement %1</strong> vous a été assigné",
